@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Telegram Web App</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            background-color: #f7f7f7;
+        }
+        .button {
+            padding: 10px 20px;
+            font-size: 16px;
+            color: white;
+            background-color: #0088cc;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .button:hover {
+            background-color: #0077bb;
+        }
+        .info {
+            margin-top: 20px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            background: white;
+            border-radius: 5px;
+            text-align: center;
+            max-width: 90%;
+        }
+    </style>
+</head>
+<body>
+    <h1>Welcome to Telegram Web App</h1>
+    <button class="button" id="closeButton">Close App</button>
+    <div class="info" id="userInfo">Loading user information...</div>
+
+    <script>
+        // Initialize Telegram WebApp
+        const telegram = window.Telegram.WebApp;
+        
+        // Display the app title
+        telegram.setHeaderColor('bg_color', '#0088cc');
+        telegram.setBackgroundColor('#ffffff');
+        telegram.MainButton.text = "Main Button";
+        telegram.MainButton.show();
+
+        // Event listener for Main Button
+        telegram.MainButton.onClick(() => {
+            telegram.showAlert('Main Button clicked!');
+        });
+
+        // Populate user information
+        const userInfoDiv = document.getElementById('userInfo');
+        if (telegram.initDataUnsafe && telegram.initDataUnsafe.user) {
+            const user = telegram.initDataUnsafe.user;
+            userInfoDiv.innerHTML = `
+                <p><strong>User Info:</strong></p>
+                <p>First Name: ${user.first_name}</p>
+                <p>Last Name: ${user.last_name || 'N/A'}</p>
+                <p>Username: ${user.username || 'N/A'}</p>
+                <p>Language: ${telegram.initDataUnsafe.user.language_code || 'N/A'}</p>
+            `;
+        } else {
+            userInfoDiv.innerHTML = '<p>Unable to load user information.</p>';
+        }
+
+        // Close App button
+        const closeButton = document.getElementById('closeButton');
+        closeButton.addEventListener('click', () => {
+            telegram.close();
+        });
+
+        // Greet user on load
+        telegram.ready();
+        telegram.showAlert('Welcome to the WebApp!');
+    </script>
+</body>
+</html>
